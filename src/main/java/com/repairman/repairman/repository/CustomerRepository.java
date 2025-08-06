@@ -14,3 +14,5 @@ public interface CustomerRepository extends JpaRepository<CustomerModel, Long> {
     @Query("select u from CustomerModel u where u.username = ?1")
     CustomerModel findByUsername(String username);
 }
+
+
