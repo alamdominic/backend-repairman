@@ -2,6 +2,7 @@ package com.repairman.repairman.model;
 import jakarta.persistence.*;
 import java.rmi.UnmarshalException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class CustomerModel {
     @Column(name = "custumer_id")
     private Long ID;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "username",nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -24,7 +25,7 @@ public class CustomerModel {
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = true)
@@ -33,11 +34,18 @@ public class CustomerModel {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "createdat", nullable = false, columnDefinition = "DATETIME")
+    @Column(name = "createdat", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDate createdat;
+    //Genera la fecha de creacion en automatico
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdat = LocalDate.now();
+    }
 
     //Constructor lleno y vacio (Lo usa JPA)
-    public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDate createdat) {
+    public CustomerModel(Long ID, String username, String firstName, String lastName,
+                         String email, String password, String phoneNumber, LocalDate createdat) {
         this.ID = ID;
         this.username = username;
         this.firstname = firstName;
