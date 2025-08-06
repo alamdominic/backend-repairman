@@ -1,6 +1,7 @@
 package com.repairman.repairman.model;
 import jakarta.persistence.*;
-import java.rmi.UnmarshalException;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,14 +10,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "custumers")
 public class CustomerModel {
-
     //Atributos de la clase
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "custumer_id")
     private Long ID;
 
-    @Column(name = "username",nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -25,7 +25,7 @@ public class CustomerModel {
     @Column(nullable = false)
     private String lastname;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = true)
@@ -34,18 +34,12 @@ public class CustomerModel {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "createdat", nullable = false, columnDefinition = "TIMESTAMP")
-    private LocalDate createdat;
-    //Genera la fecha de creacion en automatico
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdat = LocalDate.now();
-    }
+    @CreationTimestamp
+    @Column(name = "createdat", nullable = false, updatable = false)
+    private LocalDateTime createdat;
 
     //Constructor lleno y vacio (Lo usa JPA)
-    public CustomerModel(Long ID, String username, String firstName, String lastName,
-                         String email, String password, String phoneNumber, LocalDate createdat) {
+    public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime createdat) {
         this.ID = ID;
         this.username = username;
         this.firstname = firstName;
@@ -116,11 +110,11 @@ public class CustomerModel {
         this.password = password;
     }
 
-    public LocalDate getCreatedat() {
+    public LocalDateTime getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(LocalDate createdat) {
+    public void setCreatedat(LocalDateTime createdat) {
         this.createdat = createdat;
     }
 
