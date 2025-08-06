@@ -37,12 +37,9 @@ public class CustomerModel {
     @CreationTimestamp
     @Column(name = "createdat", nullable = false, updatable = false)
     private LocalDateTime createdat;
-    @CreationTimestamp
-    @Column(name = "createdat", nullable = false, updatable = false)
-    private LocalDateTime createdat;
+
 
     //Constructor lleno y vacio (Lo usa JPA)
-    public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime createdat) {
     public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime createdat) {
         this.ID = ID;
         this.username = username;
@@ -115,11 +112,9 @@ public class CustomerModel {
     }
 
     public LocalDateTime getCreatedat() {
-    public LocalDateTime getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(LocalDateTime createdat) {
     public void setCreatedat(LocalDateTime createdat) {
         this.createdat = createdat;
     }
