@@ -25,6 +25,16 @@ public class CustomerController {
         return customerService.getCostumers();
     }
 
+    // Mapear findById
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<CustomerModel> getById(@PathVariable Long id){
+        try {
+            return ResponseEntity.ok(customerService.findById(id));
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Mapear create Customer usando ResponseEntity
     @PostMapping("/create-customer")
     public ResponseEntity<CustomerModel> addCustomer(@RequestBody CustomerModel newCustomer){

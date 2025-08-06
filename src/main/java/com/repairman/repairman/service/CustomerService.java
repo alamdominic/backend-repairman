@@ -9,24 +9,25 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CustomerService {
-     private final CustomerRepository customerRepository;
 
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
     // Metodo para devolver todos los customers
     public List<CustomerModel> getCostumers(){
-
         return customerRepository.findAll();
+    }
+
+    // Metodo para devolver un unico customer una Exception
+    public CustomerModel findById(Long id){
+        // lanzamos una exception usando lambda orElseThrow
+        return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
     }
 
     // Metodo para crear nuevo Customer
@@ -68,12 +69,5 @@ public class CustomerService {
         .orElseThrow(() -> new CustomerNotFoundException(id));
         // Lanzamos una exception si el usuario solicitado no existe
     }
-    // Metodo para recuperar a un user por email
-    public CustomerModel findByEmail(String email){
-        return customerRepository.findByEmail(email);
-    }
-    // Metodo para recuperar un User por username
-    public CustomerModel findByUsername(String username){
-        return customerRepository.findByUserName(username);
-    }
+
 }
