@@ -1,9 +1,11 @@
 package com.repairman.repairman.model;
 import jakarta.persistence.*;
-import java.rmi.UnmarshalException;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "custumers")
@@ -33,11 +35,12 @@ public class CustomerModel {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "createdat", nullable = false, columnDefinition = "DATETIME")
-    private LocalDate createdat;
+    @CreationTimestamp
+    @Column(name = "createdat", nullable = false, updatable = false)
+    private LocalDateTime createdat;
 
     //Constructor lleno y vacio (Lo usa JPA)
-    public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDate createdat) {
+    public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime createdat) {
         this.ID = ID;
         this.username = username;
         this.firstname = firstName;
@@ -108,11 +111,11 @@ public class CustomerModel {
         this.password = password;
     }
 
-    public LocalDate getCreatedat() {
+    public LocalDateTime getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(LocalDate createdat) {
+    public void setCreatedat(LocalDateTime createdat) {
         this.createdat = createdat;
     }
 

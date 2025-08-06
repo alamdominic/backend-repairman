@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<CustomerModel, Long> {
 
-    @Query("SELECT u FROM customers u WHERE u.email = ?1")
+    @Query("select u from CustomerModel u where u.email = ?1")
     CustomerModel findByEmail(String email);
 
-    @Query("SELECT u FROM customers u WHERE u.username = ?1") // Usa el nombre exacto del campo en User
-    CustomerModel findByUserName(String username);
+    @Query("select u from CustomerModel u where u.username = ?1")
+    CustomerModel findByUsername(String username);
 }
