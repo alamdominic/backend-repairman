@@ -1,12 +1,11 @@
 package com.repairman.repairman.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table (name = "repairs")
+@Table(name = "repairs")
 public class RepairModel {
 
     @Id
@@ -14,7 +13,7 @@ public class RepairModel {
     @Column(name = "repair_id")
     private Long repairid;
 
-    @Column(nullable = false )
+    @Column(nullable = false)
     private String custumerid;
 
     @Column(nullable = false)
@@ -32,12 +31,17 @@ public class RepairModel {
     @Column(name = "createdat", nullable = false, columnDefinition = "DATETIME")
     private LocalDate createdat;
 
+    // Relación ManyToOne con CustomerModel
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false) // FK en tabla repairs
+    private CustomerModel customer;
+
     public RepairModel() {
     }
 
     public RepairModel(Long repairid, String custumerid, String brand,
                        String issue, String description, Double price,
-                       LocalDate createdat) {
+                       LocalDate createdat, CustomerModel customer) {
         this.repairid = repairid;
         this.custumerid = custumerid;
         this.brand = brand;
@@ -45,6 +49,7 @@ public class RepairModel {
         this.description = description;
         this.price = price;
         this.createdat = createdat;
+        this.customer = customer;
     }
 
     public Long getRepairid() {
@@ -113,8 +118,16 @@ public class RepairModel {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof RepairModel that)) return false;
-        return Objects.equals(repairid, that.repairid) && Objects.equals(custumerid, that.custumerid) && Objects.equals(brand, that.brand) && Objects.equals(issue, that.issue) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createdat, that.createdat) && Objects.equals(customer, that.customer);
+        if (!(o instanceof RepairModel)) return false;
+        RepairModel that = (RepairModel) o;
+        return Objects.equals(repairid, that.repairid)
+                && Objects.equals(custumerid, that.custumerid)
+                && Objects.equals(brand, that.brand)
+                && Objects.equals(issue, that.issue)
+                && Objects.equals(description, that.description)
+                && Objects.equals(price, that.price)
+                && Objects.equals(createdat, that.createdat)
+                && Objects.equals(customer, that.customer);
     }
 
     @Override
@@ -135,11 +148,4 @@ public class RepairModel {
                 ", customer=" + customer +
                 '}';
     }
-
-    //Cardinalidad: Muchas reparaciones a un solo usuario
-    @ManyToOne
-    @JoinColumn(name = "repair_id_customer")
-    private CustomerModel customer;
-
-
 }
