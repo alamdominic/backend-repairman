@@ -1,31 +1,18 @@
 package com.repairman.repairman.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "sales")
 public class SalesModel {
-    /* base de datos MySQL
-    CREATE TABLE VENTA(
-    VENTA_ID INT NOT NULL AUTO_INCREMENT,
-    CLIENTE_ID INT NULL,
-    MARCA VARCHAR(50) NOT NULL,
-    MODELO VARCHAR(50) NOT NULL,
-    ESTADO_EQUIPO VARCHAR(100) NOT NULL,
-    DESCRIPCION TEXT,
-    PRECIO DECIMAL(10,2) NOT NULL,
-    CREATED_AT TIMESTAMP NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (VENTA_ID),
-    FOREIGN KEY (CLIENTE_ID) REFERENCES CLIENTE(CLIENTE_ID)
-        ON DELETE SET NULL ON UPDATE CASCADE
-    */
-
-
     //Atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_ID")
+    @Column(name = "sale_id") // Correccion from purchase_id a sale_id
     private Long salesID;
 
     @Column(nullable = false )
@@ -46,12 +33,12 @@ public class SalesModel {
     @Column(nullable = false)
     private Double price;
 
-    @Column(name = "createdAt", nullable = false, columnDefinition = "DATETIME")
-    private LocalDate createdAt;
+    @CreationTimestamp
+    @Column(name = "createdat", nullable = false, updatable = false)
+    private LocalDateTime createdat;
 
     //Constructor leno 1 vacio (Lo usa JPA)
-    public SalesModel(Long salesID, String costumerID, String brand, String model, String cellphoneStatus,
-                      String description, Double price, LocalDate createdAt) {
+    public SalesModel(Long salesID, String costumerID, String brand, String model, String cellphoneStatus, String description, Double price, LocalDateTime createdat) {
         this.salesID = salesID;
         this.costumerID = costumerID;
         this.brand = brand;
@@ -59,7 +46,7 @@ public class SalesModel {
         this.cellphoneStatus = cellphoneStatus;
         this.description = description;
         this.price = price;
-        this.createdAt = createdAt;
+        this.createdat = createdat;
     }
 
     public SalesModel() {
@@ -122,28 +109,24 @@ public class SalesModel {
         this.description = description;
     }
 
-    public LocalDate getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreatedAt() {
+        return createdat;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedAt(LocalDateTime createdat) {
+        this.createdat = createdat;
     }
 
     //Equals & HashCode
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof SalesModel that)) return false;
-        return Objects.equals(salesID, that.salesID) && Objects.equals(costumerID, that.costumerID)
-                && Objects.equals(brand, that.brand) && Objects.equals(model, that.model)
-                && Objects.equals(cellphoneStatus, that.cellphoneStatus)
-                && Objects.equals(description, that.description) && Objects.equals(price, that.price)
-                && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(salesID, that.salesID) && Objects.equals(costumerID, that.costumerID) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(cellphoneStatus, that.cellphoneStatus) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createdat, that.createdat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(salesID, costumerID, brand, model, cellphoneStatus, description, price, createdAt);
+        return Objects.hash(salesID, costumerID, brand, model, cellphoneStatus, description, price, createdat);
     }
 
 
@@ -158,7 +141,7 @@ public class SalesModel {
                 ", cellphoneStatus='" + cellphoneStatus + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", createdAt=" + createdAt +
+                ", createdAt=" + createdat +
                 '}';
     }
 
