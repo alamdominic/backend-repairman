@@ -8,12 +8,12 @@ import java.util.Objects;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "custumers")
+@Table(name = "customers")
 public class CustomerModel {
     //Atributos de la clase
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "custumer_id")
+    @Column(name = "customer_id")
     private Long ID;
 
     @Column(nullable = false, unique = true)
