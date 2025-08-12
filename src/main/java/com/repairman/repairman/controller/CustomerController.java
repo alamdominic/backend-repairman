@@ -13,6 +13,7 @@ import com.repairman.repairman.exceptions.CustomerNotFoundException;
 @RestController
 @RequestMapping("/api/v1/repairman")
 public class CustomerController {
+    @Autowired
     private final CustomerService customerService;
     
     public CustomerController(CustomerService customerService) {

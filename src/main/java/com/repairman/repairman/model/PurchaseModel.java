@@ -14,9 +14,6 @@ public class PurchaseModel {
     @Column(name = "purchase_ID")
     private Long purchaseID;
 
-    @Column(nullable = false )
-    private String costumerID;
-
     @Column(nullable = false)
     private String brand;
 
@@ -33,9 +30,8 @@ public class PurchaseModel {
     private LocalDate createdAt;
 
     //Constructor
-    public PurchaseModel(Long purchaseID, String costumerID, String brand, String phoneStatus, String description, Double price, LocalDate createdAt) {
+    public PurchaseModel(Long purchaseID, String brand, String phoneStatus, String description, Double price, LocalDate createdAt) {
         this.purchaseID = purchaseID;
-        this.costumerID = costumerID;
         this.brand = brand;
         this.phoneStatus = phoneStatus;
         this.description = description;
@@ -54,14 +50,6 @@ public class PurchaseModel {
 
     public void setPurchaseID(Long purchaseID) {
         this.purchaseID = purchaseID;
-    }
-
-    public String getCostumerID() {
-        return costumerID;
-    }
-
-    public void setCostumerID(String costumerID) {
-        this.costumerID = costumerID;
     }
 
     public String getBrand() {
@@ -108,7 +96,7 @@ public class PurchaseModel {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PurchaseModel that)) return false;
-        return Objects.equals(purchaseID, that.purchaseID) && Objects.equals(costumerID, that.costumerID)
+        return Objects.equals(purchaseID, that.purchaseID)
                 && Objects.equals(brand, that.brand) && Objects.equals(phoneStatus, that.phoneStatus)
                 && Objects.equals(description, that.description) && Objects.equals(price, that.price)
                 && Objects.equals(createdAt, that.createdAt);
@@ -116,7 +104,7 @@ public class PurchaseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(purchaseID, costumerID, brand, phoneStatus, description, price, createdAt);
+        return Objects.hash(purchaseID, brand, phoneStatus, description, price, createdAt);
     }
 
     //Método ToString
@@ -124,7 +112,6 @@ public class PurchaseModel {
     public String toString() {
         return "PurchaseModel{" +
                 "purchaseID=" + purchaseID +
-                ", costumerID='" + costumerID + '\'' +
                 ", brand='" + brand + '\'' +
                 ", phoneStatus='" + phoneStatus + '\'' +
                 ", description='" + description + '\'' +
