@@ -1,6 +1,5 @@
 package com.repairman.repairman.model;
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -14,9 +13,6 @@ public class SalesModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sale_id") // Correccion from purchase_id a sale_id
     private Long salesID;
-
-    @Column(nullable = false )
-    private String costumerID;
 
     @Column(nullable = false )
     private String brand;
@@ -38,9 +34,8 @@ public class SalesModel {
     private LocalDateTime createdat;
 
     //Constructor leno 1 vacio (Lo usa JPA)
-    public SalesModel(Long salesID, String costumerID, String brand, String model, String cellphoneStatus, String description, Double price, LocalDateTime createdat) {
-        this.salesID = salesID;
-        this.costumerID = costumerID;
+    public SalesModel(Long salesID, String brand, String model, String cellphoneStatus, String description, Double price, LocalDateTime createdat) {
+        this.salesID = salesID;    
         this.brand = brand;
         this.model = model;
         this.cellphoneStatus = cellphoneStatus;
@@ -59,14 +54,6 @@ public class SalesModel {
 
     public void setSalesID(Long salesID) {
         this.salesID = salesID;
-    }
-
-    public String getCostumerID() {
-        return costumerID;
-    }
-
-    public void setCostumerID(String costumerID) {
-        this.costumerID = costumerID;
     }
 
     public String getBrand() {
@@ -121,12 +108,12 @@ public class SalesModel {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof SalesModel that)) return false;
-        return Objects.equals(salesID, that.salesID) && Objects.equals(costumerID, that.costumerID) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(cellphoneStatus, that.cellphoneStatus) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createdat, that.createdat);
+        return Objects.equals(salesID, that.salesID) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(cellphoneStatus, that.cellphoneStatus) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createdat, that.createdat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(salesID, costumerID, brand, model, cellphoneStatus, description, price, createdat);
+        return Objects.hash(salesID, brand, model, cellphoneStatus, description, price, createdat);
     }
 
 
@@ -135,7 +122,6 @@ public class SalesModel {
     public String toString() {
         return "SalesModel{" +
                 "salesID=" + salesID +
-                ", costumerID='" + costumerID + '\'' +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
                 ", cellphoneStatus='" + cellphoneStatus + '\'' +
