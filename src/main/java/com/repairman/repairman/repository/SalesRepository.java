@@ -11,4 +11,6 @@ public interface SalesRepository extends JpaRepository<SalesModel, Long> {
     SalesModel findBySalesID(Long salesID);
     // findBySalesID le dice a JPA que una búsque por la propiedad salesID de la entidad
 
+
+
 }
