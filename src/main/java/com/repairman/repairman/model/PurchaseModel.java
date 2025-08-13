@@ -142,7 +142,7 @@ public class PurchaseModel {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", createdAt=" + createdAt +
-                ", customer=" + (customer != null ? customer.getID() : "null") +
+                ", customer=" + (customer != null ? customer.getCustomerID() : "null") +
                 '}';
     }
 }
