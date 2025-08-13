@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "sales")
@@ -33,7 +34,8 @@ public class SalesModel {
     @Column(nullable = false)
     private Double price;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // le da un formato de salida más legible
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // le da un formato de salida más legible
+    @JsonIgnore
     @CreationTimestamp
     @Column(name = "createdat", nullable = false, updatable = false)
     private LocalDateTime createdat;
@@ -102,6 +104,7 @@ public class SalesModel {
         this.description = description;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // formatea la salida del json
     public LocalDateTime getCreatedAt() {
         return createdat;
     }
