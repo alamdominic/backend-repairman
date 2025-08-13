@@ -186,4 +186,6 @@ public class CustomerModel {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List <SalesModel> sales;
+
+
 }
