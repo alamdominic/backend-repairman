@@ -5,6 +5,10 @@ import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "sales")
 public class SalesModel {
@@ -29,12 +33,13 @@ public class SalesModel {
     @Column(nullable = false)
     private Double price;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // le da un formato de salida más legible
     @CreationTimestamp
     @Column(name = "createdat", nullable = false, updatable = false)
     private LocalDateTime createdat;
 
     //Constructor leno 1 vacio (Lo usa JPA)
-    public SalesModel(Long salesID, String brand, String model, String cellphoneStatus, String description, Double price, LocalDateTime createdat) {
+    public SalesModel(Long salesID, String brand, String model, String cellphoneStatus, String description, Double price, LocalDateTime createdat, CustomerModel customer) {
         this.salesID = salesID;    
         this.brand = brand;
         this.model = model;
@@ -42,6 +47,7 @@ public class SalesModel {
         this.description = description;
         this.price = price;
         this.createdat = createdat;
+        this.customer = customer; // Se añade un objeto de tipo CustomerModel
     }
 
     public SalesModel() {
@@ -104,6 +110,15 @@ public class SalesModel {
         this.createdat = createdat;
     }
 
+    // Getter & Setter para el objeto tipo CustomerModel
+    public CustomerModel getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerModel customer) {
+        this.customer = customer;
+    }
+
     //Equals & HashCode
     @Override
     public boolean equals(Object o) {
@@ -130,7 +145,8 @@ public class SalesModel {
                 ", createdAt=" + createdat +
                 '}';
     }
-
+    
+    @JsonBackReference // evita serializar el json de nuevo
     @ManyToOne
     @JoinColumn(name = "sales_id_customer")
     private CustomerModel customer;

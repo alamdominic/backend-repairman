@@ -7,6 +7,8 @@ import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "customers")
 public class CustomerModel {
@@ -14,7 +16,7 @@ public class CustomerModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
-    private Long ID;
+    private Long customerID;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -40,8 +42,8 @@ public class CustomerModel {
 
 
     //Constructor lleno y vacio (Lo usa JPA)
-    public CustomerModel(Long ID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime createdat) {
-        this.ID = ID;
+    public CustomerModel(Long customerID, String username, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime createdat) {
+        this.customerID = customerID;
         this.username = username;
         this.firstname = firstName;
         this.lastname = lastName;
@@ -55,12 +57,12 @@ public class CustomerModel {
     }
 
     //Getter & Setter
-    public Long getID() {
-        return ID;
+    public Long getCustomerID() {
+        return customerID;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public void setCustomerID(Long customerID) {
+        this.customerID = customerID;
     }
 
     public String getUsername() {
@@ -123,7 +125,7 @@ public class CustomerModel {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof CustomerModel that)) return false;
-        return Objects.equals(ID, that.ID) && Objects.equals(username, that.username)
+        return Objects.equals(customerID, that.customerID) && Objects.equals(username, that.username)
                 && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname)
                 && Objects.equals(email, that.email) && Objects.equals(phonenumber, that.phonenumber)
                 && Objects.equals(password, that.password) && Objects.equals(createdat, that.createdat);
@@ -131,14 +133,14 @@ public class CustomerModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, username, firstname, lastname, email, phonenumber, password, createdat);
+        return Objects.hash(customerID, username, firstname, lastname, email, phonenumber, password, createdat);
     }
 
     //ToString
     @Override
     public String toString() {
         return "CustomerModel{" +
-                "ID=" + ID +
+                "ID=" + customerID +
                 ", username='" + username + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
@@ -184,6 +186,12 @@ public class CustomerModel {
         this.sales = sales;
     }
 
+    @JsonManagedReference // maneja lo que serializa en json
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List <SalesModel> sales;
+    /**
+     * @JsonManagedReference
+     * @JsonBackReference
+     * Evitan serializar los objetos json sin entrar en un bucle infinito.
+     */
 }

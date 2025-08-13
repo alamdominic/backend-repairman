@@ -13,9 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/repairman")
 public class SalesController {
-    private final SalesService salesService;
-
     @Autowired
+    private final SalesService salesService;
     public SalesController(SalesService salesService) {
         this.salesService = salesService;
     }
@@ -27,9 +26,10 @@ public class SalesController {
     }
 
     // Crear una nueva venta
-    @PostMapping("add-sale")
-    public SalesModel addSale(@RequestBody SalesModel newSale) {
-        return salesService.addSale(newSale);
+    @PostMapping("/add-sale")
+    public ResponseEntity<SalesModel> addSale(@RequestBody SalesModel newSale) {
+        SalesModel addNewSale = salesService.addSale(newSale);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addNewSale);
     }
 
     // Buscar por id getById()
