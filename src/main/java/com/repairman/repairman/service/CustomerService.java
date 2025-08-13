@@ -15,6 +15,8 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    //constructor de la clase CustomerService y su función es recibir una dependencia (CustomerRepository)
+    // y asignarla al campo interno de la clase para poder usarla.
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
@@ -24,7 +26,7 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    // Metodo para devolver un unico customer una Exception
+    // Método para devolver un único customer una Exception
     public CustomerModel findById(Long id){
         // lanzamos una exception usando lambda orElseThrow
         return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));

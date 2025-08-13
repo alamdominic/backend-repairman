@@ -55,7 +55,7 @@ public class SalesService {
         }
     }
 
-    // Actualizar informaciín de venta
+    // Actualizar información de venta
     public SalesModel updateSale(SalesModel sale, Long id) {
         SalesModel oneSale = salesRepository.findById(id)
             .orElseThrow(() -> new SaleNotFoundException(id));
@@ -70,7 +70,8 @@ public class SalesService {
         return salesRepository.save(oneSale);
         /*
         return salesRepository.findById(id).map(salesModel -> {
-            salesModel.setBrand(salesModel.getBrand());
+            // Actualizar los campos con los valores del parámetro 'sale'
+            salesModel.setBrand(sale.getBrand());
             salesModel.setCellphoneStatus(sale.getCellphoneStatus());
             salesModel.setCreatedAt(salesModel.getCreatedAt());
             salesModel.setDescription(salesModel.getDescription());
