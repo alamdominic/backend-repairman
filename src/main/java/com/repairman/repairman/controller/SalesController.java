@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/repairman")
+@CrossOrigin(origins = "*") // habilita las politicas CORS
 public class SalesController {
     @Autowired
     private final SalesService salesService;

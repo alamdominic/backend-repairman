@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/repairman/purchases")
+@CrossOrigin(origins = "*") // habilita las politicas CORS
 public class PurchaseController {
     private final PurchaseService purchaseService;
 

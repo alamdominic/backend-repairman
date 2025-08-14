@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.repairman.repairman.exceptions.CustomerNotFoundException;
 
+
 //Método para controlar la inserción de un nuevo usuario
 @RestController
 @RequestMapping("/api/v1/repairman")
+@CrossOrigin(origins = "*") // habilita las politicas CORS
 public class CustomerController {
     @Autowired
     private final CustomerService customerService;
@@ -71,4 +73,10 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/demo")
+    public String dashboard() {
+        return "Endpoint asegurado";
+    }
+    
 }
