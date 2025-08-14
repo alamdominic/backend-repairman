@@ -33,6 +33,10 @@ public class SalesModel {
     @Column(nullable = false)
     private Double price;
 
+    // Campo para la imagen
+    @Column(length = 255, name = "image_url", nullable = false)
+    private String imageUrl;
+
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // le da un formato de salida más legible
     @JsonIgnore
     @CreationTimestamp
@@ -40,13 +44,14 @@ public class SalesModel {
     private LocalDateTime createdat;
 
     //Constructor leno 1 vacio (Lo usa JPA)
-    public SalesModel(Long salesID, String brand, String model, String cellphoneStatus, String description, Double price, LocalDateTime createdat, CustomerModel customer) {
+    public SalesModel(Long salesID, String brand, String model, String cellphoneStatus, String description, Double price, String imageUrl, LocalDateTime createdat, CustomerModel customer) {
         this.salesID = salesID;    
         this.brand = brand;
         this.model = model;
         this.cellphoneStatus = cellphoneStatus;
         this.description = description;
         this.price = price;
+        this.imageUrl = imageUrl;
         this.createdat = createdat;
         this.customer = customer; // Se añade un objeto de tipo CustomerModel
     }
@@ -103,6 +108,15 @@ public class SalesModel {
         this.description = description;
     }
 
+    
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // formatea la salida del json
     public LocalDateTime getCreatedAt() {
         return createdat;
@@ -125,12 +139,12 @@ public class SalesModel {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof SalesModel that)) return false;
-        return Objects.equals(salesID, that.salesID) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(cellphoneStatus, that.cellphoneStatus) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createdat, that.createdat);
+        return Objects.equals(salesID, that.salesID) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(cellphoneStatus, that.cellphoneStatus) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(createdat, that.createdat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(salesID, brand, model, cellphoneStatus, description, price, createdat);
+        return Objects.hash(salesID, brand, model, cellphoneStatus, description, price, imageUrl, createdat);
     }
 
 
@@ -144,6 +158,7 @@ public class SalesModel {
                 ", cellphoneStatus='" + cellphoneStatus + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", createdAt=" + createdat +
                 '}';
     }
