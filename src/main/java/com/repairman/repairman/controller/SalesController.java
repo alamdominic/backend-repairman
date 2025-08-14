@@ -1,7 +1,9 @@
 package com.repairman.repairman.controller;
 
 import com.repairman.repairman.exceptions.SaleNotFoundException;
+import com.repairman.repairman.model.CustomerModel;
 import com.repairman.repairman.model.SalesModel;
+import com.repairman.repairman.service.CustomerService;
 import com.repairman.repairman.service.SalesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,10 @@ import java.util.List;
 public class SalesController {
     @Autowired
     private final SalesService salesService;
-    public SalesController(SalesService salesService) {
+    private CustomerService customerService; 
+    public SalesController(SalesService salesService, CustomerService customerService ) {
         this.salesService = salesService;
+        this.customerService = customerService;
     }
 
     // getSales()
@@ -29,8 +33,26 @@ public class SalesController {
     // Crear una nueva venta
     @PostMapping("/add-sale")
     public ResponseEntity<SalesModel> addSale(@RequestBody SalesModel newSale) {
+        /* 
         SalesModel addNewSale = salesService.addSale(newSale);
         return ResponseEntity.status(HttpStatus.CREATED).body(addNewSale);
+        
+        */
+        //obtiene el ID del cliente del objeto JSON
+        Long customerId = newSale.getCustomer().getCustomerID();
+        // Busca el CustomerModel en la base de datos
+        CustomerModel customer = customerService.findById(customerId);
+
+        if (customer != null) {
+            // si el cliente existe, asigna el objeto CustomerModel a la venta
+            newSale.setCustomer(customer);
+            // Guarda la nueva venta
+            SalesModel savedSale = salesService.addSale(newSale);
+            return new ResponseEntity<>(savedSale, HttpStatus.CREATED);
+        } else {
+            // Maneja el caso en que el cliente no se encuentre
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Buscar por id getById()
