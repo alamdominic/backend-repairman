@@ -1,4 +1,4 @@
-package com.repairman.repairman.controller;
+/*package com.repairman.repairman.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,4 +19,4 @@ public class AuthController {
     public String register() {
         return "Registro";
     }
-}
+}*/
