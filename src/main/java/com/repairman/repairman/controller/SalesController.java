@@ -76,7 +76,7 @@ public class SalesController {
         }
     }
 
-    // Actaulizar una venta updateSale()
+    // Actualizar una venta updateSale()
     @PutMapping("/update-sale/{id}")
     public ResponseEntity<SalesModel> updateSale(@RequestBody SalesModel sale, @PathVariable Long id) {
         try {
