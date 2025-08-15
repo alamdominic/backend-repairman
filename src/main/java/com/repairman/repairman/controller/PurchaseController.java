@@ -1,8 +1,11 @@
 package com.repairman.repairman.controller;
-
 import com.repairman.repairman.exceptions.PurchaseCustomerNotFoundException;
+import com.repairman.repairman.model.CustomerModel;
 import com.repairman.repairman.model.PurchaseModel;
+import com.repairman.repairman.model.SalesModel;
+import com.repairman.repairman.service.CustomerService;
 import com.repairman.repairman.service.PurchaseService;
+import com.repairman.repairman.service.SalesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,78 +14,71 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/repairman/purchases")
+@RequestMapping("/api/v1/repairman/purchases-controller")
 @CrossOrigin(origins = "*") // habilita las politicas CORS
 public class PurchaseController {
     private final PurchaseService purchaseService;
+    private CustomerService customerService;
 
-    public PurchaseController(PurchaseService purchaseService) {
+    public PurchaseController(PurchaseService purchaseService, CustomerService customerService) {
         this.purchaseService = purchaseService;
+        this.customerService = customerService;
     }
 
     // Obtener TODAS las compras
-    @GetMapping
-    public ResponseEntity<?> getAllPurchases(){
-        List<PurchaseModel> purchases = purchaseService.getAllPurchases();
-
-        if (purchases.isEmpty()){
-            return ResponseEntity.ok("No hay compras registradas");
-        }
-        return ResponseEntity.ok(purchases);
+    @GetMapping ("/purchases")
+    public List<PurchaseModel> getPurchases() {
+        return purchaseService.getPurchases();
     }
 
-    // Obtener compras de un customer específico
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<?> getPurchasesByCustomerId(@PathVariable Long customerId) {
+    //Crear nueva compra
+    @PostMapping("/add-purchase")
+    public ResponseEntity<PurchaseModel> addPurchase(@RequestBody PurchaseModel newPurchase) {
+        //obtiene el ID del cliente del objeto JSON
+        Long customerId = newPurchase.getCustomer().getCustomerID();
+        // Busca el CustomerModel en la base de datos
+        CustomerModel customer = customerService.findById(customerId);
+
+        if (customer != null) {
+            // si el cliente existe, asigna el objeto CustomerModel a la venta
+            newPurchase.setCustomer(customer);
+            // Guarda la nueva venta
+            PurchaseModel savedPurchase = purchaseService.addPurchase(newPurchase);
+            return new ResponseEntity<>(savedPurchase, HttpStatus.CREATED);
+        } else {
+            // Maneja el caso en que el cliente no se encuentre
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Buscar por id getById()
+    @GetMapping("purchases/{id}")
+    public ResponseEntity<PurchaseModel> getById(@PathVariable Long id) {
         try {
-            List<PurchaseModel> purchases = purchaseService.findByCustomerID(customerId);
-            return ResponseEntity.ok(purchases);
+            return ResponseEntity.ok(purchaseService.getById(id));
         } catch (PurchaseCustomerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // Obtener una compra específica por su ID
-    @GetMapping("/{purchaseId}")
-    public ResponseEntity<?> getPurchaseById(@PathVariable Long purchaseId) {
+    // Eliminar compra por id deleteById()
+    @DeleteMapping("/delete-purchase/{id}")
+    public ResponseEntity<SalesModel> deleteById(@PathVariable Long id) {
         try {
-            PurchaseModel purchase = purchaseService.findByPurchaseID(purchaseId);
-            return ResponseEntity.ok(purchase);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+            purchaseService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (PurchaseCustomerNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    // Crear una nueva compra
-    @PostMapping
-    public ResponseEntity<PurchaseModel> createPurchase(@RequestBody PurchaseModel purchase) {
-        PurchaseModel savedPurchase = purchaseService.createPurchase(purchase);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPurchase);
-    }
-
-    // Actualizar una compra
-    @PutMapping("/{purchaseId}")
-    public ResponseEntity<?> updatePurchase(@PathVariable Long purchaseId, @RequestBody PurchaseModel updatedPurchase) {
+    // Actualizar una compra updateSale()
+    @PutMapping("/update-sale/{id}")
+    public ResponseEntity<PurchaseModel> updateSale(@RequestBody PurchaseModel sale, @PathVariable Long id) {
         try {
-            PurchaseModel purchase = purchaseService.updatePurchase(purchaseId, updatedPurchase);
-            return ResponseEntity.ok(purchase);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    // Eliminar una compra
-    @DeleteMapping("/{purchaseId}")
-    public ResponseEntity<?> deletePurchase(@PathVariable Long purchaseId) {
-        try {
-            purchaseService.deletePurchase(purchaseId);
-            return ResponseEntity.ok(Map.of("message", "Compra eliminada exitosamente"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(purchaseService.updateSale(sale, id));
+        } catch (PurchaseCustomerNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }
