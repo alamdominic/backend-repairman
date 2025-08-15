@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "purchases")
 public class PurchaseModel {
@@ -30,6 +32,7 @@ public class PurchaseModel {
     private LocalDate createdAt;
 
     // IMPORTANTE: La relación debe estar ANTES de los constructores
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_id_customer")
     private CustomerModel customer;

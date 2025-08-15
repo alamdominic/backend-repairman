@@ -160,7 +160,8 @@ public class CustomerModel {
     public void setRepairs(List<RepairModel> repairs) {
         this.repairs = repairs;
     }
-
+    
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List <RepairModel> repairs;
 
@@ -173,6 +174,8 @@ public class CustomerModel {
     public void setPurchases(List<PurchaseModel> purchases) {
         this.purchases = purchases;
     }
+
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List <PurchaseModel> purchases;
 

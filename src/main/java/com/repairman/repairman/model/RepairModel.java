@@ -2,8 +2,14 @@ package com.repairman.repairman.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table (name = "repairs")
@@ -12,13 +18,16 @@ public class RepairModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "repair_id")
-    private Long repairid;
+    private Long repairID;
 
-    @Column(nullable = false )
-    private String custumerid;
+    //@Column(nullable = false )
+    //private String custumerid;
 
     @Column(nullable = false)
     private String brand;
+
+    @Column(nullable = false )
+    private String  model;
 
     @Column(nullable = false)
     private String issue;
@@ -26,42 +35,41 @@ public class RepairModel {
     @Column(nullable = false)
     private String description;
 
+    @Column(length = 255, name = "image_url", nullable = false)
+    private String imageUrl;
+
     @Column(nullable = false)
     private Double price;
 
-    @Column(name = "createdat", nullable = false, columnDefinition = "DATETIME")
-    private LocalDate createdat;
+    @JsonIgnore
+    @CreationTimestamp
+    @Column(name = "createdat", nullable = false, updatable = false)
+    private LocalDateTime createdat;
 
     public RepairModel() {
     }
 
-    public RepairModel(Long repairid, String custumerid, String brand,
-                       String issue, String description, Double price,
-                       LocalDate createdat) {
-        this.repairid = repairid;
-        this.custumerid = custumerid;
+    public RepairModel(Long repairID, CustomerModel customer, String brand, String model ,String issue, String description, Double price, String imageUrl, LocalDateTime createdat) {
+        this.repairID = repairID;
+        this.customer = customer;
         this.brand = brand;
+        this.model = model;
         this.issue = issue;
         this.description = description;
         this.price = price;
+        this.imageUrl = imageUrl;
         this.createdat = createdat;
     }
 
     public Long getRepairid() {
-        return repairid;
+        return repairID;
     }
 
     public void setRepairid(Long repairid) {
-        this.repairid = repairid;
+        this.repairID = repairid;
     }
 
-    public String getCustumerid() {
-        return custumerid;
-    }
-
-    public void setCustumerid(String custumerid) {
-        this.custumerid = custumerid;
-    }
+  
 
     public String getBrand() {
         return brand;
@@ -69,6 +77,14 @@ public class RepairModel {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getIssue() {
@@ -87,11 +103,21 @@ public class RepairModel {
         this.description = description;
     }
 
-    public LocalDate getCreatedat() {
+    
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // formatea la fecha
+    public LocalDateTime getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(LocalDate createdat) {
+    public void setCreatedat(LocalDateTime createdat) {
         this.createdat = createdat;
     }
 
@@ -114,29 +140,32 @@ public class RepairModel {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof RepairModel that)) return false;
-        return Objects.equals(repairid, that.repairid) && Objects.equals(custumerid, that.custumerid) && Objects.equals(brand, that.brand) && Objects.equals(issue, that.issue) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(createdat, that.createdat) && Objects.equals(customer, that.customer);
+        return Objects.equals(repairID, that.repairID) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(issue, that.issue) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(createdat, that.createdat) && Objects.equals(customer, that.customer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(repairid, custumerid, brand, issue, description, price, createdat, customer);
+        return Objects.hash(repairID, customer, brand, model, issue, description, price, imageUrl, createdat, customer);
     }
 
     @Override
     public String toString() {
         return "RepairModel{" +
-                "repairid=" + repairid +
-                ", custumerid='" + custumerid + '\'' +
+                "repairid=" + repairID +
+                '\'' +
                 ", brand='" + brand + '\'' +
                 ", issue='" + issue + '\'' +
+                ", model='" + model + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", createdat=" + createdat +
                 ", customer=" + customer +
                 '}';
     }
 
     //Cardinalidad: Muchas reparaciones a un solo usuario
+    @JsonBackReference // evita serializar el json de nuevo
     @ManyToOne
     @JoinColumn(name = "repair_id_customer")
     private CustomerModel customer;
