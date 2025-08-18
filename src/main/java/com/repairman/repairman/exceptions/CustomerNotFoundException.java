@@ -5,4 +5,8 @@ public class CustomerNotFoundException extends RuntimeException{
 
         super("No se encontró el cliente con id" + id);
     }
+
+    /*public EmailNotFoundException (String email){
+        super("No se encontró el email: " + "'" + email + "'");
+    } */
 }

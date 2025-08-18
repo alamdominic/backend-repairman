@@ -1,6 +1,7 @@
 package com.repairman.repairman.service;
 
 import com.repairman.repairman.exceptions.CustomerNotFoundException;
+import com.repairman.repairman.exceptions.LogInException;
 import com.repairman.repairman.model.CustomerModel;
 import com.repairman.repairman.repository.CustomerRepository;
 
@@ -36,16 +37,45 @@ public class CustomerService {
     public CustomerModel createCustomer(CustomerModel newCustomer){
         return customerRepository.save(newCustomer);
     }
-    // Metodo para recuperar a un user por email
-    public CustomerModel findByEmail(String email){
-        return customerRepository.findByEmail(email);
-    }
-    // Metodo para recuperar un User por username
+
     public CustomerModel findByUsername(String username){
         return customerRepository.findByUsername(username);
     }
 
-     // Metodo para eliminar por id
+    // Metodo para recuperar a un user por email
+    public CustomerModel findByEmail(String email){
+        return customerRepository.findByEmail(email);
+    }
+
+    // Método para login - recibimos el email y password ingresado en el front
+    // Método para login - recibimos el email y password ingresado en el front
+    public CustomerModel login(String email, String password) throws LogInException {
+
+        // 1. Normalizar email
+        String normalizedEmailFront = email.toLowerCase().trim();
+
+        // 2. Buscar usuario por email
+        CustomerModel customerEmailDB = findByEmail(normalizedEmailFront);
+
+        // 3. Validar si existe el usuario
+        if (customerEmailDB == null) {
+            throw new LogInException("Usuario con email '" + normalizedEmailFront + "' no encontrado");
+        }
+
+        // 4. Validar contraseña
+        if (!customerEmailDB.getPassword().equals(password)) {
+            // Ahora usamos LogInException también para contraseña incorrecta
+            throw new LogInException("Contraseña incorrecta");
+        }
+
+        // 5. Login exitoso
+        return customerEmailDB;
+    }
+
+
+
+
+    // Metodo para eliminar por ID
     public void deleteById(Long id){
         if (customerRepository.existsById(id)) { // Validando que exista el id
             customerRepository.deleteById(id);
@@ -54,7 +84,7 @@ public class CustomerService {
         }
     }
 
-    // Metodo para actualizar en base al Id
+
     // todos los atributos del customer
     public CustomerModel updateCustomer(Long id, CustomerModel customer){
         // map() nos permite hacer una copia que vamos a manipular
