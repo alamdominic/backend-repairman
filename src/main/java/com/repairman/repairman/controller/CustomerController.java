@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import com.repairman.repairman.exceptions.CustomerNotFoundException;
 
 import javax.security.auth.login.LoginException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 //Método para controlar la inserción de un nuevo usuario
@@ -41,6 +44,19 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Mapear customer by Email
+        @GetMapping("/customer/email/{email}")
+    public ResponseEntity<CustomerModel> getByEmail(@PathVariable String email) {
+        CustomerModel customerByEmail = customerService.findByEmail(email);
+
+        if (customerByEmail == null) {
+            return ResponseEntity.notFound().build(); // 404
+        }
+        // return ResponseEntity.ok(userByEmail); // Manera 1
+        return new ResponseEntity<>(customerByEmail, HttpStatus.OK); // Manera 2
+    }
+    
 
     // Mapear create Customer usando ResponseEntity
     @PostMapping("/create-customer")
