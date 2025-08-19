@@ -47,33 +47,32 @@ public class CustomerService {
         return customerRepository.findByEmail(email);
     }
 
-    // Método para login - recibimos el email y password ingresado en el front
+    public CustomerModel updatePassword(Long id, String newPassword) {
+        return customerRepository.findById(id).map(customer -> {
+            customer.setPassword(newPassword); // prueba
+            return customerRepository.save(customer);
+        }).orElseThrow(() -> new CustomerNotFoundException(id));
+    }
+
     // Método para login - recibimos el email y password ingresado en el front
     public CustomerModel login(String email, String password) throws LogInException {
 
-        // 1. Normalizar email
+        // Normalizar email
         String normalizedEmailFront = email.toLowerCase().trim();
-
-        // 2. Buscar usuario por email
+        // Buscar usuario por email
         CustomerModel customerEmailDB = findByEmail(normalizedEmailFront);
-
-        // 3. Validar si existe el usuario
+        // Validar si existe el usuario
         if (customerEmailDB == null) {
             throw new LogInException("Usuario con email '" + normalizedEmailFront + "' no encontrado");
         }
-
-        // 4. Validar contraseña
+        // Validar contraseña
         if (!customerEmailDB.getPassword().equals(password)) {
             // Ahora usamos LogInException también para contraseña incorrecta
             throw new LogInException("Contraseña incorrecta");
         }
-
-        // 5. Login exitoso
+        // Login exitoso
         return customerEmailDB;
     }
-
-
-
 
     // Metodo para eliminar por ID
     public void deleteById(Long id){
@@ -94,7 +93,7 @@ public class CustomerService {
             customerMap.setFirstname(customer.getFirstname());
             customerMap.setLastname(customer.getLastname());
             customerMap.setEmail(customer.getEmail());
-            customerMap.setPassword(customer.getPassword());
+            //customerMap.setPassword(customer.getPassword());
             customerMap.setPhonenumber(customer.getPhonenumber());
             return customerRepository.save(customerMap);
         })

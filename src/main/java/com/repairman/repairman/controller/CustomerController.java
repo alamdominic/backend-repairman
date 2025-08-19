@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.repairman.repairman.dto.LoginRequest;
 import com.repairman.repairman.exceptions.CustomerNotFoundException;
 
 import javax.security.auth.login.LoginException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -93,6 +93,19 @@ public class CustomerController {
         }
     }
 
+    // Put para actualizar solo la password
+    @PutMapping("/customer/update-password/{id}")
+    public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody CustomerModel customer) {
+    try {
+        customerService.updatePassword(id, customer.getPassword());
+        return ResponseEntity.ok().body("{\"message\": \"Contraseña actualizada exitosamente\"}"); // Retorna un 200 OK
+    } catch (CustomerNotFoundException e) {
+        return ResponseEntity.notFound().build(); // Retorna 404
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la contraseña");
+    }
+}
+
     @PostMapping("/demo")
     public String dashboard() {
         return "Endpoint asegurado";
@@ -105,7 +118,7 @@ public class CustomerController {
         "email": "juan@email.com",
         "password": "123456"
     }
-    */
+    
         try {
                 // TODO: extraer email y password del CustomerModel recibido
             String frontEmail = loginData.getEmail();
@@ -125,5 +138,20 @@ public class CustomerController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+        */
+        try {
+            String frontEmail = loginData.getEmail();
+            String frontPassword = loginData.getPassword();
+            
+            CustomerModel resultLogIn = customerService.login(frontEmail, frontPassword);
+            
+            return ResponseEntity.ok(resultLogIn);
+        } catch (LogInException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+    
     
 }
